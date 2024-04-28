@@ -5,8 +5,18 @@
     "action": { "default_popup": "index.html" },
     "content_scripts": [
         {
-            "js": ["src/content.tsx"],
-            "matches": ["https://lms.keio.jp/*"]
+            "js": ["src/content.ts"],
+            "matches": ["https://lms.keio.jp/"],
+            "run_at": "document_idle"
         }
+    ],
+    "web_accessible_resources": [
+        {
+          "resources": ["src/inject.js"],
+          "matches": ["https://lms.keio.jp/*"]
+        }
+    ],
+    "permissions": [
+        "storage"
     ]
 }
