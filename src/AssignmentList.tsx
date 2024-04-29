@@ -6,10 +6,10 @@ const storedAssignments = (await (chrome.storage.local.get('klmsToolsAssignments
 const storedCourses = (await (chrome.storage.local.get('klmsToolsCourses') as unknown as {klmsToolsCourses:StudentPlannerCourses[] | null})).klmsToolsCourses
 console.log('aa', storedAssignments)
 const [assignments, setAssignments] = createSignal<Assignment[] | null>(storedAssignments)
-if (assignments() !== null) {
+if (assignments()) {
   setAssignments(assignments()!.filter(assignment => {
     const minutes = dayjs(assignment.due_at).diff(dayjs(), 'minute')
-    return minutes * 60 * 24 * 7
+    // return minutes * 60 * 24 * 7
     return 0 < minutes && minutes * 60 * 24 * 7
   }))
 }

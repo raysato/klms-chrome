@@ -6,14 +6,14 @@ import AssignmentList from './AssignmentList';
 const [showSettings, setShowSettings] = createSignal(false)
 const toggleSettings = () => setShowSettings(!showSettings())
 const storedAssignments = (await (chrome.storage.local.get('klmsToolsAssignments') as unknown as {klmsToolsAssignments:any})).klmsToolsAssignments
-
+const titleClick = () => chrome.storage.local.clear()
 
 const App: Component = () => {
   return (
     <div class='base-100 w-96 font-sans'>
       <div class="navbar bg-base-200">
         <div class="flex-1">
-          <a class="btn btn-ghost text-xl">KLMS Tools</a>
+          <a onclick={titleClick} class="btn btn-ghost text-xl">KLMS Tools</a>
         </div>
         <div class="flex-none">
           <button onclick={toggleSettings} class="btn btn-square btn-ghost">
@@ -29,10 +29,10 @@ const App: Component = () => {
           <Settings />
           <div class="divider"></div>
         </Show >
-        <Show when={storedAssignments !== null}>
+        <Show when={storedAssignments !== undefined}>
           <AssignmentList />
         </Show >
-        <Show when={storedAssignments === null}>
+        <Show when={storedAssignments === undefined}>
           <p class='text-base'>
             講義データが読み込まれていません。<br />
             <a class='link link-primary' href='https://lms.keio.jp/' target="_blank" rel="noopener noreferrer" >KLMS</a>を開いてください。

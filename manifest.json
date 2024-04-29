@@ -3,6 +3,7 @@
     "name": "KLMS Tools",
     "version": "1.0.0",
     "action": { "default_popup": "index.html" },
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAydwe0c17DKvgITOkw3nnr12BR1/xACNv4YgDi0p+/dPXmOJckXRpnD5R9mPpZB8yp3+r4mwmjLRhq6g4PBTheis+CHYRczZ17WgZEoBCHmgXarfMVIWXJUEsAzWPPXCtW6dYWB6FSVi9tY+lDafiSPR4RzhPrFpljQV62sWjb3uWO3JXeFTCqY415DxQy34oNpl9+obLn4Wpw83HEeRhak8kTgKUT5KDOEJzPMWRz50mnpeOs1lWe59HovJiP+0nQstwH6JcRCSi6SJs1WFlrBoJyUoth+FuLel5LO2geoc5x5RstPRF1EcHHtUDVpRTzA/O2yxBRzSkSfD4ocaKBQIDAQAB",
     "content_scripts": [
         {
             "js": ["src/content.ts"],
@@ -17,6 +18,15 @@
         }
     ],
     "permissions": [
-        "storage"
-    ]
+        "storage",
+        "identity",
+        "identity.email"
+    ],
+    "oauth2": {
+        "client_id": "704724830622-0od9ilkni61n3oilif1soocijdcga76j.apps.googleusercontent.com",
+        "scopes": [
+            "profile email",
+            "https://www.googleapis.com/auth/tasks"
+        ]
+    }
 }
