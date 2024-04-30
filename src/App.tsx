@@ -1,12 +1,16 @@
-import { Show, For, Match, Switch, createSignal, type Component } from 'solid-js';
+import { Show, For, Match, Switch, createSignal, type Component, createResource } from 'solid-js';
 import Settings from './Settings';
 import AssignmentList from './AssignmentList';
+import { updateGoogleTasks } from './google';
+import { Plannable } from './types';
 
 
 const [showSettings, setShowSettings] = createSignal(false)
 const toggleSettings = () => setShowSettings(!showSettings())
-const storedAssignments = (await (chrome.storage.local.get('klmsToolsAssignments') as unknown as {klmsToolsAssignments:any})).klmsToolsAssignments
-const titleClick = () => chrome.storage.local.clear()
+const [storedAssignments] = createSignal<{assignments:Plannable[]}>(await (chrome.storage.sync.get('assignments') as Promise<{assignments:Plannable[]}>))
+const titleClick = async () => {
+  console.log(await updateGoogleTasks())
+}
 
 const App: Component = () => {
   return (
@@ -29,10 +33,10 @@ const App: Component = () => {
           <Settings />
           <div class="divider"></div>
         </Show >
-        <Show when={storedAssignments !== undefined}>
+        <Show when={storedAssignments().assignments !== undefined}>
           <AssignmentList />
         </Show >
-        <Show when={storedAssignments === undefined}>
+        <Show when={storedAssignments().assignments === undefined}>
           <p class='text-base'>
             講義データが読み込まれていません。<br />
             <a class='link link-primary' href='https://lms.keio.jp/' target="_blank" rel="noopener noreferrer" >KLMS</a>を開いてください。

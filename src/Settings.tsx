@@ -1,7 +1,7 @@
 import { Component, createResource } from "solid-js";
 import { toggleLogin, getUserInfo } from './google'
 
-const resetData = () => chrome.storage.local.set({ "klmsToolsAssignments": null, "klmsToolsCourses": null });
+const resetData = () => chrome.storage.sync.clear()
 const [userInfo] = createResource(getUserInfo)
 
 const Settings: Component = () => {

@@ -1,19 +1,16 @@
 import { Component, For, Show, createSignal } from "solid-js";
-import { Assignment, StudentPlannerCourses } from './types';
 import dayjs from 'dayjs'
+import { Plannable } from "./types";
 
-const storedAssignments = (await (chrome.storage.local.get('klmsToolsAssignments') as unknown as {klmsToolsAssignments:Assignment[] | null})).klmsToolsAssignments
-const storedCourses = (await (chrome.storage.local.get('klmsToolsCourses') as unknown as {klmsToolsCourses:StudentPlannerCourses[] | null})).klmsToolsCourses
-console.log('aa', storedAssignments)
-const [assignments, setAssignments] = createSignal<Assignment[] | null>(storedAssignments)
+const storedAssignments = (await (chrome.storage.local.get('assignments') as unknown as {assignments:Plannable[] | null})).assignments
+const [assignments, setAssignments] = createSignal<Plannable[] | null>(storedAssignments)
 if (assignments()) {
   setAssignments(assignments()!.filter(assignment => {
-    const minutes = dayjs(assignment.due_at).diff(dayjs(), 'minute')
+    const minutes = dayjs(assignment.plannable.due_at).diff(dayjs(), 'minute')
     // return minutes * 60 * 24 * 7
-    return 0 < minutes && minutes * 60 * 24 * 7
+    return true
   }))
 }
-const findCourse = (id: number) => storedCourses?.filter(course => parseInt(course.id) === id)[0]
 const getTimeLeft = (timeStr: string) => {
   const minutes = dayjs(timeStr).diff(dayjs(), 'minute')
   if (Math.abs(minutes) > 60 * 24) {
@@ -55,12 +52,12 @@ const AssignmentList: Component = () => {
                 <div class="text-lg font-medium border-b-2 border-primary flex items-center">
                     <div class="flex-none text-sm mr-3 flex items-end">
                     <p class='text-sm mr-1'>残り</p>
-                    <p class={ `${getTimeLeftColor(assignment.due_at)} text-lg` }>{ getTimeLeft(assignment.due_at) }</p>
+                    <p class={ `${getTimeLeftColor(assignment.plannable.due_at)} text-lg` }>{ getTimeLeft(assignment.plannable.due_at) }</p>
                     </div>
-                    <div class="tooltip tooltip-bottom flex-grow text-left" data-tip={findCourse(assignment.course_id)?.shortName}>
-                    <a class='cursor-pointer w-fit'>{ assignment.name }</a>
+                    <div class="tooltip tooltip-bottom flex-grow text-left" data-tip={assignment.context_name}>
+                    <a class='cursor-pointer w-fit'>{ assignment.plannable.title }</a>
                     </div>
-                    <a href={assignment.html_url} target="_blank" rel="noopener noreferrer" class='flex-none hover:bg-base-300 rounded-md'>
+                    <a href={`https://lms.keio.jp/${assignment.html_url}`} target="_blank" rel="noopener noreferrer" class='flex-none hover:bg-base-300 rounded-md'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                     </svg>
