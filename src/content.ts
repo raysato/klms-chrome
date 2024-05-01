@@ -9,4 +9,6 @@ const plannables: Plannable[] = await fetch('https://lms.keio.jp/api/v1/planner/
 
 const assignments = plannables.filter(plannable => plannable.plannable_type === 'assignment')
 console.log({assignments})
-chrome.storage.local.set({assignments});
+chrome.storage.sync.set({assignments});
+
+console.log( await chrome.storage.sync.get('assignments'))
