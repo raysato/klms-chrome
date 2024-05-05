@@ -1,15 +1,15 @@
 import { Show, For, Match, Switch, createSignal, type Component, createResource } from 'solid-js';
 import Settings from './Settings';
 import AssignmentList from './AssignmentList';
-import { updateGoogleTasks } from './google';
+// import { updateGoogleTasks } from './google';
 import { Plannable } from './types';
 
 
 const [showSettings, setShowSettings] = createSignal(false)
 const toggleSettings = () => setShowSettings(!showSettings())
 const [storedAssignments] = createSignal<{assignments:Plannable[]}>(await (chrome.storage.sync.get('assignments') as Promise<{assignments:Plannable[]}>))
-const titleClick = async () => {
-  console.log(await updateGoogleTasks())
+const titleClick = () => {
+  console.log(console.log(chrome.identity))
 }
 
 const App: Component = () => {

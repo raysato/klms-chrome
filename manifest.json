@@ -7,7 +7,7 @@
     "content_scripts": [
         {
             "js": ["src/content.ts"],
-            "matches": ["https://lms.keio.jp/"],
+            "matches": ["https://lms.keio.jp/*"],
             "run_at": "document_idle"
         }
     ],
@@ -17,6 +17,10 @@
           "matches": ["https://lms.keio.jp/*"]
         }
     ],
+    "background": {
+        "service_worker": "src/background.ts",
+        "type": "module"
+    },
     "permissions": [
         "storage",
         "identity",

@@ -12,3 +12,9 @@ console.log({assignments})
 chrome.storage.sync.set({assignments});
 
 console.log( await chrome.storage.sync.get('assignments'))
+console.log('start content')
+document.getElementById('left-side')?.addEventListener('click', async () => {
+  console.log('click')
+  const result = chrome.runtime.sendMessage({type: "token"});
+  console.log(await result)
+});

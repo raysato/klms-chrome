@@ -1,5 +1,3 @@
-import { Assignment } from "./types";
-
 const API_KEY = 'AIzaSyBBsYEusied9aZjbb4N8UsreHKi8Yvmu0I';
 
 export let loggedIn = false;
@@ -20,9 +18,13 @@ export const toggleLogin = async () => {
     await chrome.identity.getAuthToken({ interactive: true })
     chrome.runtime.reload()
 }
-
-export const addAssignmentTask = (assgignment: Assignment) => {
-
+export const getToken =  () => {
+    return chrome.identity.getAuthToken({ interactive: false })
+    try {
+        return chrome.identity ?? null
+    } catch (error) {
+        return false
+    }
 }
 
 export const getUserInfo = async () => await isUserLoggedIn() ? (await chrome.identity.getProfileUserInfo({})) : null
