@@ -2,12 +2,13 @@ import { Component, For, Show, createSignal } from "solid-js";
 import dayjs from 'dayjs'
 import { Plannable } from "./types";
 
-const storedAssignments = (await (chrome.storage.local.get('assignments') as unknown as {assignments:Plannable[] | null})).assignments
+const storedAssignments = (await (chrome.storage.sync.get('assignments') as unknown as {assignments:Plannable[] | null})).assignments
 const [assignments, setAssignments] = createSignal<Plannable[] | null>(storedAssignments)
 if (assignments()) {
   setAssignments(assignments()!.filter(assignment => {
     const minutes = dayjs(assignment.plannable.due_at).diff(dayjs(), 'minute')
-    // return minutes * 60 * 24 * 7
+    return minutes >= 0 && Math.abs(minutes) <= 60 * 24 * 7 
+    return minutes * 60 * 24 * 7
     return true
   }))
 }

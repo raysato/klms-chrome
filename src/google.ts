@@ -1,4 +1,5 @@
-const API_KEY = 'AIzaSyBBsYEusied9aZjbb4N8UsreHKi8Yvmu0I';
+import dayjs from 'dayjs';
+import {Plannable, Task, TaskList, TaskListsResponse} from './types'
 
 export let loggedIn = false;
 
@@ -12,18 +13,21 @@ export const toggleLogin = async () => {
             alert('removed');
             });
         }
+        chrome.storage.sync.set({google: false});
         chrome.runtime.reload()
         return
     }
     await chrome.identity.getAuthToken({ interactive: true })
+    chrome.storage.sync.set({google: true});
     chrome.runtime.reload()
 }
-export const getToken =  () => {
-    return chrome.identity.getAuthToken({ interactive: false })
+export const getToken =  async () => {
     try {
-        return chrome.identity ?? null
+        const tokenData = await chrome.identity.getAuthToken({ interactive: false })
+        return tokenData.token ?? null
     } catch (error) {
-        return false
+        console.error({error})
+        return null
     }
 }
 
@@ -35,4 +39,45 @@ export const isUserLoggedIn =  async () => {
     } catch (error) {
         return false
     }
+}
+
+export const updateGoogleTasks = () => {
+
+}
+
+export const addAssignmentAsTask = async (assignment: Plannable, tokenFromContent?: string) => {
+    const token = tokenFromContent ?? await getToken()
+    if (!token) {
+        throw Error('No user token found.')
+    }
+    const taskListId = await getTaskListId(token)
+    const task = await requestTaskApi(token, `/tasks/v1/lists/${taskListId}/tasks`, 'POST', {
+        title: assignment.plannable.title,
+        notes: `assignment.context_name\n${assignment.html_url}`,
+        due: dayjs(assignment.plannable.due_at).format('YYYY-MM-DD')
+    }) as Task
+    return task
+}
+
+const getTaskListId = async (token: string) => {
+    const tasklistId = (chrome.storage.sync.get('tasklistId') as unknown as { tasklistId: string | null; }).tasklistId
+    if (tasklistId) {
+        return tasklistId
+    }
+    const taskLists = await requestTaskApi(token, '/tasks/v1/users/@me/lists', 'POST', {title: 'KLMS'}) as TaskListsResponse
+    const taskList = taskLists.items.filter(taskList => taskList.title === 'KLMS')[0]
+        ?? await requestTaskApi(token, '/tasks/v1/users/@me/lists', 'GET') as TaskList
+    chrome.storage.sync.set({tasklistId: taskList.id})
+    return taskList.id
+}
+
+const requestTaskApi = async (token: string, url: string, method: 'POST' | 'GET', body: Object = {}) => {
+    const response = await fetch(`https://tasks.googleapis.com${url}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        method,
+        body: JSON.stringify(body)
+    })
+    return await response.json()
 }
