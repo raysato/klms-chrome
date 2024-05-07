@@ -11,6 +11,7 @@ export interface Plannable {
   html_url: string
   context_name: string
   context_image: any
+  googleTaskApiLink?: string
 }
 
 interface Submissions {
@@ -32,4 +33,43 @@ interface Detail {
   updated_at: string
   points_possible: number
   due_at: string
+}
+
+export interface TaskList {
+  kind: string;
+  id: string;
+  etag: string;
+  title: string;
+  updated: string;
+  selfLink: string;
+}
+
+export interface TaskListsResponse {
+  kind: string;
+  etag: string;
+  nextPageToken?: string;
+  items: TaskList[];
+}
+
+export interface Task {
+  kind: string;
+  id: string;
+  etag: string;
+  title: string;
+  updated: string;
+  selfLink: string;
+  parent: string;
+  position: string;
+  notes: string;
+  status: string;
+  due: string;
+  completed: string;
+  deleted: boolean;
+  hidden: boolean;
+  links: {
+    type: string;
+    description: string;
+    link: string;
+  }[];
+  webViewLink: string;
 }

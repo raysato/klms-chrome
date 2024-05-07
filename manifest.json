@@ -7,7 +7,7 @@
     "content_scripts": [
         {
             "js": ["src/content.ts"],
-            "matches": ["https://lms.keio.jp/"],
+            "matches": ["https://lms.keio.jp/*"],
             "run_at": "document_idle"
         }
     ],
@@ -17,10 +17,15 @@
           "matches": ["https://lms.keio.jp/*"]
         }
     ],
+    "background": {
+        "service_worker": "src/background.ts",
+        "type": "module"
+    },
     "permissions": [
         "storage",
         "identity",
-        "identity.email"
+        "identity.email",
+        "tabs"
     ],
     "oauth2": {
         "client_id": "704724830622-0od9ilkni61n3oilif1soocijdcga76j.apps.googleusercontent.com",
