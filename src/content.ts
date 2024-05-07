@@ -8,7 +8,7 @@ const plannables: Plannable[] = await fetch('https://lms.keio.jp/api/v1/planner/
 })).then(async r => await r.json())
   .catch(e => {throw new Error('Could not retrieve course info. Are you logged-out?')})
 console.log(plannables)
-chrome.runtime.sendMessage({type: "processPlannables", plannables});
+chrome.runtime.sendMessage({type: "processPlannables", plannables: testdata});
 
 console.log( await chrome.storage.sync.get('assignments'))
 console.log('start content')

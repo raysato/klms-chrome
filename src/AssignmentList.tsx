@@ -7,8 +7,8 @@ const [assignments, setAssignments] = createSignal<Plannable[] | null>(storedAss
 if (assignments()) {
   setAssignments(assignments()!.filter(assignment => {
     const minutes = dayjs(assignment.plannable.due_at).diff(dayjs(), 'minute')
-    return minutes >= 0 && Math.abs(minutes) <= 60 * 24 * 7 
-    return minutes * 60 * 24 * 7
+    // return minutes >= 0 && Math.abs(minutes) <= 60 * 24 * 7 
+    // return minutes * 60 * 24 * 7
     return true
   }))
 }

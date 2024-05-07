@@ -25,7 +25,8 @@
         "storage",
         "identity",
         "identity.email",
-        "tabs"
+        "tabs",
+        "alarm"
     ],
     "oauth2": {
         "client_id": "704724830622-0od9ilkni61n3oilif1soocijdcga76j.apps.googleusercontent.com",
