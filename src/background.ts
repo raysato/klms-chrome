@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { addAssignmentAsTask, getToken, updateAssignmentTask, updateGoogleTasks } from "./google";
 import { Plannable } from "./types";
+import { fetchPlannables } from "./canvas";
 
 const tokenData = {
     updatedAt: dayjs(),
@@ -12,9 +13,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         processPlannables(request.plannables)
         return
     }
+    if (request.type === 'initAlarm') {
+        initAlarm()
+        return
+    }
     if (request.type === 'test') {
-        const data = await token()
-        sendResponse(data)
+        initAlarm()
         return
     }
 });
@@ -88,3 +92,24 @@ async function retrieveTokenFromPopup() {
     }
     throw new Error('Failed retrieving user token.')
 }
+
+async function initAlarm () {
+    const alarm = await chrome.alarms.get('canvas-feching-schedular')
+    if (alarm) {
+        console.log('alarm found')
+        return
+    }
+    console.log('created alarm')
+    chrome.alarms.create('canvas-feching-schedular', {
+        delayInMinutes: 0,
+        periodInMinutes: dayjs().add(1, 'day').set('hour', 12).set('minute', 0).diff(dayjs(), 'minutes')
+    });
+}
+
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === 'canvas-feching-schedular') {
+    const plannables = await fetchPlannables(true)
+    console.log({plannables})
+    processPlannables(plannables)
+  }
+});
