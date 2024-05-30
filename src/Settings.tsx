@@ -4,8 +4,8 @@ import { setStoredAssignments, setStoredUserAssignments } from "./assignment";
 
 const [userInfo] = createResource(getUserInfo)
 const resetData = () => {
-    setStoredAssignments(undefined)
-    setStoredUserAssignments(undefined)
+    setStoredAssignments([])
+    setStoredUserAssignments([])
 }
 const Settings: Component = () => {
     return (
