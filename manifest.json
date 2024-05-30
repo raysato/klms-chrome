@@ -11,12 +11,6 @@
             "run_at": "document_idle"
         }
     ],
-    "web_accessible_resources": [
-        {
-          "resources": ["src/inject.js"],
-          "matches": ["https://lms.keio.jp/*"]
-        }
-    ],
     "background": {
         "service_worker": "src/background.ts",
         "type": "module"

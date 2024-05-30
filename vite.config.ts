@@ -19,5 +19,11 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
+    rollupOptions: {
+      input: {
+        popup: './src/Popup.html',
+        new: './src/NewAssignment.html',
+      }
+    }
   },
 });
