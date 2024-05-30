@@ -111,7 +111,7 @@ const AssignmentList: Component = () => {
                     <div class="tooltip tooltip-bottom flex-grow text-left" data-tip={(assignment.html_url ? '' : '外部: ') + assignment.context_name}>
                     <a class='cursor-pointer w-fit'>{ assignment.plannable.title }</a>
                     </div>
-                    <Show when={!assignment.html_url}>
+                    <Show when={assignment.course_id === -1}>
                       <label class="swap swap-rotate">
                         <input onchange={e => handleCheck(e, assignment)} type="checkbox" />
                         <a class='flex-none hover:bg-base-300 rounded-md swap-off'>
@@ -126,11 +126,11 @@ const AssignmentList: Component = () => {
                         </a>
                       </label>
                     </Show>
-                    <Show when={assignment.html_url}>
+                    <Show when={assignment.course_id !== -1}>
                       <a href={`https://lms.keio.jp/${assignment.html_url}`} target="_blank" rel="noopener noreferrer" class='flex-none hover:bg-base-300 rounded-md'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                      </svg>
                       </a>
                     </Show>
                 </div>
