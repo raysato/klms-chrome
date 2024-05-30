@@ -9,7 +9,6 @@ const [showSettings, setShowSettings] = createSignal(false)
 const toggleSettings = () => setShowSettings(!showSettings())
 const [storedAssignments] = createSignal<{assignments:Plannable[]}>(await (chrome.storage.sync.get('assignments') as Promise<{assignments:Plannable[]}>))
 const titleClick = () => {
-  console.log(console.log(chrome.identity))
 }
 
 const App: Component = () => {

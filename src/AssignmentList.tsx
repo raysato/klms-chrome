@@ -49,7 +49,6 @@ const openNewAssignmentForm = () => {
 const resetList = async () => {
   const array = [...(await getStoredAssignments() ?? []), ...(await getStoredUserAssignments() ?? [])]
   setAssignments(array.filter(filterAssignments))
-  console.log(array)
 }
 resetList()
 

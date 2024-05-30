@@ -52,7 +52,6 @@ export const addAssignmentAsTask = async (assignment: Plannable, tokenFromConten
         notes: `${assignment.context_name}\n${assignment.course_id !== -1 ?  `https://lms.keio.jp/${assignment.html_url}`: '' }${assignment.plannable.message ?? ''}`,
         due: dayjs(assignment.plannable.due_at).toISOString()
     }) as Task
-    console.log({task})
     return task
 }
 
@@ -62,10 +61,8 @@ export const updateAssignmentTask = async (assignment: Plannable, tokenFromConte
         throw Error('No user token found.')
     }
     if (!assignment.googleTaskApiLink) {
-        console.error({assignment})
         throw Error('No api link found for assignment.')
     }
-    console.log(assignment.googleTaskApiLink)
     const task = await requestTaskApi(token, assignment.googleTaskApiLink, 'PUT', {
         id: (assignment.googleTaskApiLink).split('/').slice(-1)[0],
         title: assignment.plannable.title,
@@ -73,7 +70,6 @@ export const updateAssignmentTask = async (assignment: Plannable, tokenFromConte
         status: assignment.submissions?.submitted ? 'completed' : 'needsAction',
         due: dayjs(assignment.plannable.due_at).toISOString()
     }) as Task
-    console.log({task})
     return task
 }
 
@@ -83,7 +79,6 @@ const getTaskListId = async (token: string) => {
         return tasklistId
     }
     const taskLists = await requestTaskApi(token, 'https://tasks.googleapis.com/tasks/v1/users/@me/lists', 'GET') as TaskListsResponse
-    console.log({taskLists})
     const taskList = taskLists.items.filter(taskList => taskList.title === 'KLMS')[0]
         ?? await requestTaskApi(token, 'https://tasks.googleapis.com/tasks/v1/users/@me/lists', 'POST', {title: 'KLMS'}) as TaskList
     chrome.storage.sync.set({tasklistId: taskList.id})
