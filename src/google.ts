@@ -22,9 +22,10 @@ export const toggleLogin = async () => {
         chrome.runtime.reload()
     })
 }
-export const getToken =  async () => {
+
+export const getToken =  async (interactive = false) => {
     try {
-        const tokenData = await chrome.identity.getAuthToken({ interactive: false })
+        const tokenData = await chrome.identity.getAuthToken({ interactive })
         return tokenData.token ?? null
     } catch (error) {
         console.error({error})
@@ -34,13 +35,7 @@ export const getToken =  async () => {
 
 export const getUserInfo = async () => await isUserLoggedIn() ? (await chrome.identity.getProfileUserInfo({})) : null
 
-export const isUserLoggedIn =  async () => {
-    try {
-        return (await chrome.identity.getAuthToken({ interactive: false })).token ? true : false
-    } catch (error) {
-        return false
-    }
-}
+export const isUserLoggedIn =  async () => ((await chrome.storage.sync.get('google')) as unknown as {google:boolean | null}).google
 
 export const updateGoogleTasks = () => {
 
@@ -54,7 +49,7 @@ export const addAssignmentAsTask = async (assignment: Plannable, tokenFromConten
     const taskListId = await getTaskListId(token)
     const task = await requestTaskApi(token, `https://tasks.googleapis.com/tasks/v1/lists/${taskListId}/tasks`, 'POST', {
         title: assignment.plannable.title,
-        notes: `${assignment.context_name}\nhttps://lms.keio.jp/${assignment.html_url}`,
+        notes: `${assignment.context_name}\n${assignment.course_id !== -1 ?  `https://lms.keio.jp/${assignment.html_url}`: '' }${assignment.plannable.message ?? ''}`,
         due: dayjs(assignment.plannable.due_at).toISOString()
     }) as Task
     console.log({task})

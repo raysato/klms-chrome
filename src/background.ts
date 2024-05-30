@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { addAssignmentAsTask, getToken, updateAssignmentTask, updateGoogleTasks } from "./google";
+import { addAssignmentAsTask, getToken, isUserLoggedIn, updateAssignmentTask, updateGoogleTasks } from "./google";
 import { Plannable } from "./types";
 
 const tokenData = {
@@ -10,23 +10,27 @@ const tokenData = {
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (request.type === 'processPlannables') {
         processPlannables(request.plannables)
+        sendResponse(null)
         return
     }
     if (request.type === 'test') {
         const data = await token()
         sendResponse(data)
+        sendResponse(null)
         return
     }
 });
 
 async function processPlannables(plannables: Plannable[]) {
     const assignments = plannables.filter(plannable => plannable.plannable_type === 'assignment')
-    const isGoogleEnabled = ((await chrome.storage.sync.get('google')) as unknown as {google:boolean | null}).google
+    const isGoogleEnabled = await isUserLoggedIn()
     const storedAssignments = ((await chrome.storage.sync.get('assignments')) as unknown as {assignments:Plannable[] | null}).assignments
     if (!isGoogleEnabled) {
+        console.log('no lgoin')
         chrome.storage.sync.set({assignments});
         return
     }
+    console.log('processing')
     const processCompleted = await new Promise<boolean>(resolve => {
         assignments.forEach(async (assignment, i) => {
             const storedAssignment = storedAssignments?.filter(value => value.plannable_id === assignment.plannable_id)[0] ?? null
