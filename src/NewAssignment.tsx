@@ -35,7 +35,6 @@ const submit = async (e: SubmitEvent) => {
       id: dayjs().unix(),
       title: title(),
       due_at: dayjs(due()).toISOString(),
-      created_at: dayjs().toISOString(),
       message: detail()
     },
     context_name: course()

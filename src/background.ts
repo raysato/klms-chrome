@@ -22,7 +22,17 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 });
 
 async function processPlannables(plannables: Plannable[]) {
-    const assignments = plannables.filter(plannable => plannable.plannable_type === 'assignment')
+    const assignments = plannables
+        .filter(plannable => plannable.plannable_type === 'assignment')
+        .map((plannable): Plannable => ({
+            course_id: plannable.course_id,
+            plannable_id: plannable.plannable_id,
+            context_name: plannable.context_name,
+            plannable: plannable.plannable,
+            submissions: {
+                submitted: plannable.submissions?.submitted || false
+            }
+        }))
     const isGoogleEnabled = await isUserLoggedIn()
     const storedAssignments = ((await chrome.storage.sync.get('assignments')) as unknown as {assignments:Plannable[] | null}).assignments
     if (!isGoogleEnabled) {

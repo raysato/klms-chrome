@@ -3,7 +3,7 @@ export interface Plannable {
   course_id: number
   plannable_id: number
   planner_override?: any
-  plannable_type: string
+  plannable_type?: string
   new_activity?: boolean
   submissions?: Submissions
   plannable_date?: string
@@ -29,7 +29,7 @@ interface Submissions {
 interface Detail {
   id: number
   title: string
-  created_at: string
+  created_at?: string
   updated_at?: string
   points_possible?: number
   due_at: string
